@@ -24,3 +24,7 @@ validation and testing.
 1. At least with many vehicles and pedestrians, CARLA seems to be CPU bottlenecked. Therefore it
 possible to run multiple recordings on multiple CARLA instances on the same GPU without significant
 slowdown.
+
+# Contributors
+This repository was developed together with Daniel Siemsen (https://github.com/dsiem) for
+projects at the University of Wuppertal.

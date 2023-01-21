@@ -1,0 +1,7 @@
+carla
+hydra-core
+numpy
+opencv-python
+pyyaml
+tqdm
+joblib

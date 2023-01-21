@@ -1,0 +1,33 @@
+instructions:
+- Right
+- Straight
+- Right
+- Right
+- Straight
+- Right
+- Left
+- Right
+- Right
+- Left
+- Right
+- Right
+- Right
+- Straight
+- Straight
+- Right
+- Straight
+- Straight
+- Right
+- Left
+- Left
+- Straight
+- Left
+- Straight
+location:
+  x: -103.21614074707031
+  y: -2.2083921432495117
+  z: 0.6000000238418579
+rotation:
+  pitch: 0.0
+  roll: 0.0
+  yaw: -89.3577651977539

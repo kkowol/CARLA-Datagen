@@ -1,0 +1,78 @@
+instructions:
+- Left
+- Right
+- Right
+- Straight
+- Straight
+- Straight
+- Straight
+- Left
+- Right
+- Right
+- Left
+- Right
+- Right
+- Straight
+- Right
+- Right
+- Right
+- Straight
+- Left
+- Right
+- Right
+- Straight
+- Right
+- Straight
+- Left
+- Right
+- Left
+- Left
+- Right
+- Right
+- Left
+- Right
+- Left
+- Straight
+- Straight
+- Left
+- Right
+- Right
+- Right
+- Straight
+- Right
+- Right
+- Straight
+- Left
+- Left
+- Straight
+- Right
+- Straight
+- Right
+- Right
+- Right
+- Straight
+- Straight
+- Left
+- Right
+- Straight
+- Straight
+- Left
+- Left
+- Right
+- Straight
+- Straight
+- Left
+- Right
+- Right
+- Straight
+- Straight
+- Straight
+- Straight
+location:
+  x: 26.85733413696289
+  y: 296.55743408203125
+  z: 0.6000000238418579
+rotation:
+  pitch: 0.0
+  roll: 0.0
+  yaw: -45.194698333740234

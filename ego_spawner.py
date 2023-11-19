@@ -1,6 +1,5 @@
 import logging
 import random
-
 import carla
 
 
@@ -33,7 +32,6 @@ class EgoSpawner:
         self.vehicle.set_autopilot(True, self.tm_port)
 
         traffic_manager = self.client.get_trafficmanager(self.tm_port)
-        traffic_manager.update_vehicle_lights(self.vehicle, True)
 
         if self.sensors is not None:
             logging.info("Spawning sensors...")

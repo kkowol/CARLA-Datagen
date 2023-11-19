@@ -1,6 +1,5 @@
 import logging
 import random
-
 import carla
 
 
@@ -65,7 +64,6 @@ class VehicleSpawner:
             traffic_manager.vehicle_percentage_speed_difference(
                 actor, random.uniform(self.min_speed_difference, self.max_speed_difference)
             )
-            traffic_manager.update_vehicle_lights(actor, True)
 
         logging.info(f"Spawned {len(self.vehicle_ids)} vehicles.")
 

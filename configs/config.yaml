@@ -5,11 +5,7 @@ save_every_n_frames: 10
 host: localhost
 port: 2000
 tm_port: 8000
-seed: 10
 n_cpu: 20
-bb_img: True      # save images with bounding boxes
-panoptic: True    # save panoptic segmentation images
-
 map: Town03
 weather_presets_carla: ClearNoon
 carla_presets: False
@@ -67,14 +63,6 @@ sensors:
       z: 1.7
   semantic:
     blueprint: sensor.camera.semantic_segmentation
-    attributes:
-      image_size_x: 1920
-      image_size_y: 1080
-    location:
-      x: 1.6
-      z: 1.7
-  instance:
-    blueprint: sensor.camera.instance_segmentation
     attributes:
       image_size_x: 1920
       image_size_y: 1080

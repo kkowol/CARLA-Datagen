@@ -1,22 +1,40 @@
 import logging
-import random
-import multiprocessing
-from joblib import Parallel, delayed
 from multiprocessing import Array
-import carla
 import cv2
 import hydra
 import numpy as np
 import omegaconf
 import yaml
 from tqdm import tqdm
+# ==============================================================================
+# -- find carla module ---------------------------------------------------------
+# ==============================================================================
+import glob
+import os
+import sys
+import getpass
+
+user = str(getpass.getuser())
+carla_version = 10
+path_egg_file = f'/home/{user}/Dokumente/CARLA_0.9.{carla_version}/PythonAPI'
+try:
+    sys.path.append(glob.glob(path_egg_file + '/carla/dist/carla-*%d.%d-%s.egg' % (
+        sys.version_info.major,
+        sys.version_info.minor,
+        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
+except IndexError:
+    pass
+import carla
+# ==============================================================================
 
 from ego_spawner import EgoSpawner
 from pedestrian_spawner import PedestrianSpawner
 from sync_mode import SyncMode
-from utils import panoptic_segmentation, vector_to_xyz, write_json_bb, write_json_bb_opt
+from utils import vector_to_xyz
 from vehicle_spawner import VehicleSpawner
 from weather import Weather
+
+
 @hydra.main(config_path="configs/", config_name="config.yaml")
 def main(cfg: omegaconf.DictConfig) -> None:
     fences = []
@@ -33,7 +51,6 @@ def main(cfg: omegaconf.DictConfig) -> None:
 
     client = carla.Client(cfg.host, cfg.port)
     client.set_timeout(10.0)
-    random.seed(cfg.seed)
     bb_image = cfg.bb_img
 
     try:
@@ -57,17 +74,12 @@ def main(cfg: omegaconf.DictConfig) -> None:
             weather.set_weather(cfg.weather)
             logging.info(f"Setting weather {cfg.weather}...")
         
-        world.set_pedestrians_seed(cfg.seed)
         world.set_pedestrians_cross_factor(cfg.pedestrians.cross_factor)
 
         traffic_manager = client.get_trafficmanager(cfg.tm_port)
         traffic_manager.set_global_distance_to_leading_vehicle(2.5)
-        traffic_manager.set_random_device_seed(cfg.seed)
         traffic_manager.set_synchronous_mode(True)
 
-        logging.info("Removing fences...")
-        fences = world.get_environment_objects(carla.CityObjectLabel.Fences)
-        world.enable_environment_objects([*map(lambda obj: obj.id, fences)], False)
 
         spawn_point = None
         if route is not None:
@@ -129,8 +141,6 @@ def main(cfg: omegaconf.DictConfig) -> None:
                             yaml.dump({i_str: info}, file)
 
                             for name, measurement in zip(cfg.sensors, measurements):
-                                
-                                
                                 filename = f"{i_str}_{name}"
                                 if isinstance(measurement, carla.Image):
                                     img = np.frombuffer(measurement.raw_data, dtype=np.uint8)
@@ -140,23 +150,12 @@ def main(cfg: omegaconf.DictConfig) -> None:
                                     measurement.save_to_disk(filename)
                                 if name == 'semantic':
                                     measurement.save_to_disk(f'{filename}_cs.png', carla.ColorConverter.CityScapesPalette)
-                                if name == 'instance':
-                                    filenames.append(filename)
-                                    i_strs.append(i_str)
-                                    images.append(bb_image)
-                                    measurements_list_height.append(measurement.height)
-                                    measurements_list_width.append(measurement.width)
-                                #     write_json_bb_opt(filename, measurement,  i_str, image)
-        Parallel(n_jobs=N_cpu)(delayed(write_json_bb)(filename,measurement_h, measurement_w, i_str, image) for (filename,measurement_h, measurement_w, i_str, image) in zip(filenames,measurements_list_height, measurements_list_width, i_strs, images))                             
-        if cfg.panoptic:
-            Parallel(n_jobs=N_cpu)(delayed(panoptic_segmentation)(i_str) for i_str in i_strs)
 
     except KeyboardInterrupt:
         logging.info("Cancelled by user.")
 
     finally:
-        logging.info("Reloading fences...")
-        world.enable_environment_objects([*map(lambda obj: obj.id, fences)], True)
+        logging.info("Recording terminated...")
 
 
 if __name__ == "__main__":

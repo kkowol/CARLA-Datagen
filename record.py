@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import logging
 from multiprocessing import Array
 import cv2
@@ -37,13 +38,6 @@ from weather import Weather
 
 @hydra.main(config_path="configs/", config_name="config.yaml")
 def main(cfg: omegaconf.DictConfig) -> None:
-    fences = []
-    filenames=[]
-    i_strs=[]
-    images = []
-    measurements_list_height = []
-    measurements_list_width = []
-    N_cpu = cfg.n_cpu
     if "route_file" in cfg:
         route = omegaconf.OmegaConf.load(hydra.utils.to_absolute_path(cfg.route_file))
     else:
@@ -51,7 +45,6 @@ def main(cfg: omegaconf.DictConfig) -> None:
 
     client = carla.Client(cfg.host, cfg.port)
     client.set_timeout(10.0)
-    bb_image = cfg.bb_img
 
     try:
         logging.info(f"Loading map {cfg.map}...")
